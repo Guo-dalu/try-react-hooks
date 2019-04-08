@@ -12,3 +12,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.container {
+  margin: 0 auto;
+  padding: 2rem;
+  background: rgba(23,194,222,.2);
+  button:not(:last-of-type) {
+    margin-right: 1rem;
+  }
+}
+
