@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
-//import App from './App';
-import App from './zhen'
+import App from './update-outside-effect';
+// import App from './zhen'
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
