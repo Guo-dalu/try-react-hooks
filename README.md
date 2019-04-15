@@ -366,10 +366,34 @@ const Button = React.memo((props) => {
 > 可以用useMemo来做性能优化，但不能在语法上保证它的准确无误。
 > 可以分别渲染两个子组件，但是，不能在循环中使用它，不过可以把list组件抽出来，然后调用useMemo。参见例子List.js。
 
+12. 如何懒初始化耗费性能的对象？
+
+  如果依赖项恒等，useMemo可记忆昂贵的计算。但是它只能当做提示来使用，而且不保证计算不会重新执行。但有些时候，需要确认一个对象只被创建一次。这时可以给useState传一个函数。
+  有时需要避免useRef的初始值被重复创建，但它不能传函数，需要手动写单例模式：
+  ```js
+  function Image(props) {
+    const ref = useRef(null)
+
+    function getObserver() {
+      let observer = ref.current
+      if(observer !== null) {
+        return observer
+      } else {
+        let newObserver = new IntersectionObserver()
+        ref.current = newObserver
+        return newObserver
+      }
+    }
+
+    const observer = getObserver()
+    // use it....
+  }
+  ```
+
 12. hook在三个方面对shouldComponentUpdate做出的优化
-- useCallback 可以在两次渲染之间维持着相同的callback引用，所以shouldComponentUpdate可以继续发挥功能。
-- useMemo 可以让单独的子组件更新更容易
-- 最后，useReducer可以避免往深层的子组件中层层传递回调，可以在context内部的子组件上任意dispatch事件。
+  - useCallback 可以在两次渲染之间维持着相同的callback引用，所以shouldComponentUpdate可以继续发挥功能。
+  - useMemo 可以让单独的子组件更新更容易
+  - 最后，useReducer可以避免往深层的子组件中层层传递回调，可以在context内部的子组件上任意dispatch事件。
 
 
 
