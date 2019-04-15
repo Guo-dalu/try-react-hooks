@@ -1,13 +1,12 @@
 import React, { useReducer, useContext, useState } from "react"
-import Button from "@material-ui/core/Button"
-import Input from "@material-ui/core/Input"
-import InputLabel from "@material-ui/core/InputLabel"
-import InputAdornment from "@material-ui/core/InputAdornment"
-import Fab from "@material-ui/core/Fab"
+import InputBase from "@material-ui/core/InputBase"
 import AddIcon from "@material-ui/icons/Add"
-import InfoIcon from "@material-ui/icons/Info"
+import IconButton from "@material-ui/core/IconButton"
 import DoneIcon from "@material-ui/icons/Done"
 import DeleteIcon from "@material-ui/icons/Delete"
+import Paper from "@material-ui/core/Paper"
+import { withStyles } from "@material-ui/core/styles"
+import Divider from "@material-ui/core/Divider"
 
 // import fetchCat from "./utils/fetchCat"
 // import Divider from "@material-ui/core/Divider"
@@ -38,16 +37,18 @@ function DeepChild({ todo, index }) {
 
   return (
     <>
-      <p>
+      <p style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <span style={todo.complete ? { textDecoration: "line-through" } : {}}>
           {todo.text}
         </span>
-        <Button aria-label="Delete" onClick={deleteTodo}>
-          <DeleteIcon />
-        </Button>
-        <Button aria-label="done" onClick={completeTodo}>
-          <DoneIcon />
-        </Button>
+        <span>
+          <IconButton aria-label="Delete" onClick={deleteTodo}>
+            <DeleteIcon />
+          </IconButton>
+          <IconButton aria-label="done" onClick={completeTodo}>
+            <DoneIcon />
+          </IconButton>
+        </span>
       </p>
     </>
   )
@@ -61,10 +62,12 @@ const initialState = [
 function todosReducer(state, action) {
   switch (action.type) {
     case "add":
-      console.log("- add")
       return state.concat({ text: action.text, complete: false })
     case "complete": {
       const { index } = action
+      if(state[index].complete) {
+        return state
+      }
       return state
         .slice(0, index)
         .concat({ ...state[action.index], complete: true })
@@ -78,7 +81,28 @@ function todosReducer(state, action) {
   }
 }
 
-function Example() {
+const styles = {
+  root: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    width: 400
+  },
+  input: {
+    marginLeft: 8,
+    flex: 1
+  },
+  iconButton: {
+    padding: 10
+  },
+  divider: {
+    width: 1,
+    height: 28,
+    margin: 4
+  }
+}
+
+function Example({ classes }) {
   // Note: `dispatch` won't change between re-renders
   const [todos, dispatch] = useReducer(todosReducer, initialState)
   const [text, setText] = useState("")
@@ -99,23 +123,26 @@ function Example() {
 
   return (
     <TodosDispatch.Provider value={dispatch}>
-      <InputLabel htmlFor="input-todo">add new todo</InputLabel>
-      <Input
-        id="input-todo"
-        startAdornment={
-          <InputAdornment position="end">
-            <InfoIcon />
-          </InputAdornment>
-        }
-        onChange={setTodo}
-        value={text}
-      />
-      <Fab onClick={addTodo} size="small">
-        <AddIcon />
-      </Fab>
+      <Paper className={classes.root} elevation={1}>
+        <InputBase
+          className={classes.input}
+          id="standard-name"
+          placeholder="add new todo"
+          onChange={setTodo}
+          value={text}
+        />
+        <Divider className={classes.divider} />
+        <IconButton
+          aria-label="add todo"
+          className={classes.iconButton}
+          onClick={addTodo}
+        >
+          <AddIcon />
+        </IconButton>
+      </Paper>
       <DeepTree todos={todos} />
     </TodosDispatch.Provider>
   )
 }
 
-export default Example
+export default withStyles(styles)(Example)
