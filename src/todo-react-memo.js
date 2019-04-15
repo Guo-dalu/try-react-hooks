@@ -1,4 +1,4 @@
-import React, { useReducer, useContext, useState, useMemo } from "react"
+import React, { useReducer, useContext, useState } from "react"
 import InputBase from "@material-ui/core/InputBase"
 import AddIcon from "@material-ui/icons/Add"
 import IconButton from "@material-ui/core/IconButton"
@@ -8,25 +8,26 @@ import Paper from "@material-ui/core/Paper"
 import { withStyles } from "@material-ui/core/styles"
 import Divider from "@material-ui/core/Divider"
 
+
 const TodosDispatch = React.createContext(null)
 
-const DeepTree = function({ todos }) {
-  return useMemo(
-    () => (
-      <>
-        {todos.map((todo, index) => (
-          <DeepChild todo={todo} key={todo.text} index={index} />
-        ))}
-      </>
-    ),
-    [todos]
+function DeepTree({ todos }) {
+  return (
+    <>
+      {todos.map((todo, index) => (
+        <DeepChild
+          text={todo.text}
+          complete={todo.complete}
+          key={todo.text}
+          index={index}
+        />
+      ))}
+    </>
   )
 }
 
-function DeepChild({ todo, index }) {
-  // If we want to perform an action, we can get dispatch from context.
+const DeepChild = React.memo(({ text, complete, index }) => {
   const dispatch = useContext(TodosDispatch)
-
   function completeTodo() {
     dispatch({ type: "complete", index: index })
   }
@@ -34,7 +35,6 @@ function DeepChild({ todo, index }) {
   function deleteTodo() {
     dispatch({ type: "delete", index: index })
   }
-
   return (
     <p
       style={{
@@ -43,9 +43,9 @@ function DeepChild({ todo, index }) {
         alignItems: "center"
       }}
     >
-      {console.log("---render deep child", todo.text)}
-      <span style={todo.complete ? { textDecoration: "line-through" } : {}}>
-        {todo.text}
+      {console.log("----memo child", text)}
+      <span style={complete ? { textDecoration: "line-through" } : {}}>
+        {text}
       </span>
       <span>
         <IconButton aria-label="Delete" onClick={deleteTodo}>
@@ -57,7 +57,8 @@ function DeepChild({ todo, index }) {
       </span>
     </p>
   )
-}
+})
+
 
 const initialState = [
   { text: "吃饭", complete: false },
@@ -144,8 +145,8 @@ function Example({ classes }) {
         >
           <AddIcon />
         </IconButton>
-      </Paper>  
-      {DeepTree({todos})}
+      </Paper>
+      <DeepTree todos={todos} />
     </TodosDispatch.Provider>
   )
 }

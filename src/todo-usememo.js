@@ -10,52 +10,49 @@ import Divider from "@material-ui/core/Divider"
 
 const TodosDispatch = React.createContext(null)
 
-const DeepTree = function({ todos }) {
-  return useMemo(
-    () => (
-      <>
-        {todos.map((todo, index) => (
-          <DeepChild todo={todo} key={todo.text} index={index} />
-        ))}
-      </>
-    ),
-    [todos]
-  )
+function DeepTree({ todos }) {
+  return <>{todos.map((todo, index) => DeepChild({todo, index}))}</>
 }
 
 function DeepChild({ todo, index }) {
   // If we want to perform an action, we can get dispatch from context.
   const dispatch = useContext(TodosDispatch)
 
-  function completeTodo() {
-    dispatch({ type: "complete", index: index })
-  }
+  return useMemo(
+    () => {
+      console.log('---in use memo', todo.text)
+      function completeTodo() {
+        dispatch({ type: "complete", index: index })
+      }
 
-  function deleteTodo() {
-    dispatch({ type: "delete", index: index })
-  }
-
-  return (
-    <p
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center"
-      }}
-    >
-      {console.log("---render deep child", todo.text)}
-      <span style={todo.complete ? { textDecoration: "line-through" } : {}}>
-        {todo.text}
-      </span>
-      <span>
-        <IconButton aria-label="Delete" onClick={deleteTodo}>
-          <DeleteIcon />
-        </IconButton>
-        <IconButton aria-label="done" onClick={completeTodo}>
-          <DoneIcon />
-        </IconButton>
-      </span>
-    </p>
+      function deleteTodo() {
+        dispatch({ type: "delete", index: index })
+      }
+      return (
+        <p
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}
+          key={todo.text + Math.random()}
+        >
+          {console.log("----memo child", todo.text)}
+          <span style={todo.complete ? { textDecoration: "line-through" } : {}}>
+            {todo.text}
+          </span>
+          <span>
+            <IconButton aria-label="Delete" onClick={deleteTodo}>
+              <DeleteIcon />
+            </IconButton>
+            <IconButton aria-label="done" onClick={completeTodo}>
+              <DoneIcon />
+            </IconButton>
+          </span>
+        </p>
+      )
+    },
+    [dispatch, index, todo.complete, todo.text]
   )
 }
 
@@ -144,8 +141,8 @@ function Example({ classes }) {
         >
           <AddIcon />
         </IconButton>
-      </Paper>  
-      {DeepTree({todos})}
+      </Paper>
+      <DeepTree todos={todos} />
     </TodosDispatch.Provider>
   )
 }

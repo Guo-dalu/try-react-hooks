@@ -367,9 +367,9 @@ const Button = React.memo((props) => {
 > 可以分别渲染两个子组件，但是，不能在循环中使用它，不过可以把list组件抽出来，然后调用useMemo。参见例子List.js。
 
 12. hook在三个方面对shouldComponentUpdate做出的优化
-- useCallback 可以在重新渲染之间维持着相同的callback引用，所以shouldComponentUpdate可以继续发挥功能。
+- useCallback 可以在两次渲染之间维持着相同的callback引用，所以shouldComponentUpdate可以继续发挥功能。
 - useMemo 可以让单独的子组件更新更容易
-- 最后，useReducer可以降低往深层的子组件中传递回调的可能性。
+- 最后，useReducer可以避免往深层的子组件中层层传递回调，可以在context内部的子组件上任意dispatch事件。
 
 
 
