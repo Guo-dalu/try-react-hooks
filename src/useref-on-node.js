@@ -16,7 +16,7 @@ function Example() {
       setHeight(333)
     }
     console.log("--- after", node)
-  }, [])
+  }, [hasRect])
 
   return (
     <>

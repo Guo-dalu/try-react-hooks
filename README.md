@@ -302,7 +302,7 @@ function Example() {
 
 7.
 > 如何处理dom元素？
-> 推荐用useCallback，也可以用useRef和useEffect结合，但是useCallback的话传入的第二个参数可以是一个空数组，避免重复渲染，而useEffect会多渲染一次，以确认前后值不变。例子参见usecallback-on-node.js和useref-on-node.js。 
+> 推荐用useCallback，也可以用useRef和useEffect结合，但是useCallback的话传入的第二个参数可以是一个空数组，避免重复渲染，而useEffect会在初始时多渲染一次，以确认前后值不变。例子参见usecallback-on-node.js和useref-on-node.js。 
 ```js
 function MeasureExample() {
   const [rect, ref] = useClientRect();

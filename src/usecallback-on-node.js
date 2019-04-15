@@ -11,7 +11,7 @@ function Example() {
     if (node) {
       setHeight(node.getBoundingClientRect().height)
     } else {
-      setHeight(2222)
+      setHeight(333)
     }
     console.log('--- after', node)
   }, [])
@@ -21,6 +21,7 @@ function Example() {
     <>
       {console.log({ height }, "----render")}
       <Button
+        variant="contained"
         onClick={() => {
           setHasRect(!hasRect)
         }}
