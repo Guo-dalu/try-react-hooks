@@ -390,6 +390,41 @@ const Button = React.memo((props) => {
   }
   ```
 
+13. 如何读取useCallback里频繁改动的值？
+  这个情况不太常见。可以手工把值存在ref中，并以ref作为依赖项。见often-changing-normal.js和often-changing-callback.js
+  ```js
+  function useEventCallback(fn, dependencies) {
+    const ref = useRef(() => {
+      throw new Error('Cannot call an event handler while rendering.');
+    });
+
+    useEffect(() => {
+      ref.current = fn;
+    }, [fn, ...dependencies]);
+
+    return useCallback(() => {
+      const fn = ref.current;
+      return fn();
+    }, [ref]);
+  }
+
+  function Form() {
+    const [text, updateText] = useState('');
+    // Will be memoized even if `text` changes:
+    const handleSubmit = useEventCallback(() => {
+      alert(text);
+    }, [text]);
+
+    return (
+      <>
+        <input value={text} onChange={e => updateText(e.target.value)} />
+        <ExpensiveTree onSubmit={handleSubmit} />
+      </>
+    );
+  }
+  ```
+
+
 12. hook在三个方面对shouldComponentUpdate做出的优化
   - useCallback 可以在两次渲染之间维持着相同的callback引用，所以shouldComponentUpdate可以继续发挥功能。
   - useMemo 可以让单独的子组件更新更容易
