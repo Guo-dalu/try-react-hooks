@@ -22,11 +22,12 @@ const [state, setState] = useState(initialState)
 
 setState(currentState)
 setState((prevState) => f(prevState))
+ 
+setState(produce(draft => {draft.user.age += 1})) // 用immer的produce的话
 ```
 
 - 接受一个值或者一个函数
-- 是整个替换更新，而不是
-自动Merge，需要解构自己merge(或者使用useReducer)
+- 是整个替换更新，而不是自动Merge，需要解构自己merge(或者使用useReducer)，可以使用Immer辅助
 - 懒init 如果initialState需要通过复杂计算获得，可以提供一个函数
 
 ```js

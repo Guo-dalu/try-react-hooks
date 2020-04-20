@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
-import App from './fetch-data-loading';
+import App from './useref-on-node';
 // import App from './zhen'
 
 ReactDOM.render(<App />, document.getElementById('root'));
